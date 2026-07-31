@@ -9,7 +9,8 @@
   "scripts": {
     "test": "node --test test/core.test.js test/ui.smoke.test.js",
     "start": "npx serve .",
-    "test:live": "node --test test/live.smoke.test.js"
+    "test:live": "node --test test/live.smoke.test.js",
+    "qa": "node test/qa-browser.js"
   },
   "keywords": [],
   "author": "",
