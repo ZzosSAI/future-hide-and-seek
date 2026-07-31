@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "node --test test/core.test.js test/ui.smoke.test.js",
-    "start": "npx serve ."
+    "start": "npx serve .",
+    "test:live": "node --test test/live.smoke.test.js"
   },
   "keywords": [],
   "author": "",
