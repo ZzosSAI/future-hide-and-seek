@@ -3,7 +3,6 @@
 services:
   - type: static
     name: future-hide-and-seek
-    runtime: static
     buildCommand: ""
     publishDir: public
     headers:
