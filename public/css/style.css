@@ -445,6 +445,9 @@ input[type="range"] { accent-color: var(--cyan); width: 110px; }
   z-index: 100;
   padding: 16px;
 }
+/* CRITICAL: the `hidden` attribute must win over the display:flex above,
+   otherwise the invisible backdrop blocks every click on the page. */
+.modal-root[hidden] { display: none; }
 .modal-card {
   width: min(480px, 94vw);
   max-height: 86dvh;
