@@ -1,0 +1,10 @@
+# dependencies / dev tooling
+node_modules/
+
+# hermes scratch files
+.hermes-tmp.*
+
+# logs & OS junk
+*.log
+.DS_Store
+Thumbs.db

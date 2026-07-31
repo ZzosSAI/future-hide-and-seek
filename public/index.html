@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Future Hide & Seek — a fun, safe, futuristic hide-and-seek game for 2–5 players on one device.">
+  <title>Future Hide &amp; Seek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ================= MAIN MENU ================= -->
+    <section class="screen active" id="screen-menu">
+      <div class="menu-inner">
+        <div class="logo">
+          <div class="logo-badge">🔍</div>
+          <h1 class="title">Future Hide &amp; Seek</h1>
+          <p class="tagline">Hide in the Neon Future City… can the Seeker find you?</p>
+        </div>
+
+        <div class="menu-buttons">
+          <button class="btn btn-primary btn-big" id="btn-menu-start">▶&nbsp; Start Game</button>
+          <button class="btn btn-secondary btn-big" id="btn-menu-howto">❓&nbsp; How to Play</button>
+        </div>
+
+        <div class="settings-panel">
+          <div class="settings-title">🎛️ Sound &amp; Music</div>
+          <div class="settings-row">
+            <button class="btn btn-small" id="btn-toggle-music">🎵 Music: ON</button>
+            <button class="btn btn-small" id="btn-toggle-sfx">🔊 Sound: ON</button>
+            <label class="volume-label">Volume
+              <input type="range" id="volume-slider" min="0" max="100" value="80">
+            </label>
+          </div>
+        </div>
+
+        <div class="champs-panel" id="champs-panel">
+          <div class="settings-title">🏆 Best Champions</div>
+          <div id="champs-list" class="champs-list"><p class="muted">No champions yet — be the first!</p></div>
+        </div>
+
+        <p class="footer-note">For 2–5 players · One device · Ages 9–12 · No ads, no sign-up, no personal data</p>
+      </div>
+    </section>
+
+    <!-- ================= SETUP ================= -->
+    <section class="screen" id="screen-setup">
+      <div class="setup-inner">
+        <h2 class="screen-title">👥 Set Up Your Game</h2>
+
+        <div class="field-group">
+          <div class="field-label">How many players?</div>
+          <div class="count-row" id="count-row">
+            <button class="chip" data-count="2">2</button>
+            <button class="chip" data-count="3">3</button>
+            <button class="chip" data-count="4">4</button>
+            <button class="chip" data-count="5">5</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Who is playing?</div>
+          <div id="player-cards" class="player-cards"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Difficulty</div>
+          <div class="diff-row" id="diff-row">
+            <button class="diff-card" data-diff="beginner">
+              <span class="diff-name">🟢 Beginner</span>
+              <span class="diff-desc">10 spots · 4 guesses · spots highlighted · free clues</span>
+            </button>
+            <button class="diff-card selected" data-diff="intermediate">
+              <span class="diff-name">🟡 Intermediate</span>
+              <span class="diff-desc">15 spots · 3 guesses · no clues</span>
+            </button>
+            <button class="diff-card" data-diff="advanced">
+              <span class="diff-name">🔴 Advanced</span>
+              <span class="diff-desc">22 spots · 3 guesses · moving robots · shimmer hints</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-row">
+          <button class="btn btn-secondary" id="btn-setup-back">← Back</button>
+          <button class="btn btn-primary" id="btn-setup-start">Start Game ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HOW TO PLAY ================= -->
+    <section class="screen" id="screen-howto">
+      <div class="howto-inner">
+        <h2 class="screen-title">❓ How to Play</h2>
+        <div class="howto-body">
+          <div class="howto-card">
+            <h3>🎮 The Game</h3>
+            <p>Future Hide &amp; Seek is hide-and-seek in a neon future city! One player is the <b>Seeker 🔍</b>, everyone else is a <b>Hider 🙈</b>. Pass the device around — hiders choose secret spots, then the Seeker tries to find them.</p>
+          </div>
+          <div class="howto-card">
+            <h3>👣 Game Flow</h3>
+            <ol class="flow-list">
+              <li>Each Hider secretly taps one hiding spot, then taps <b>Ready — Pass to the Next Player</b>.</li>
+              <li>Hiding spots stay <b>secret</b> — never peek at the screen!</li>
+              <li>The Seeker taps spots to search. Each Hider gets <b>3 guesses</b> (4 on Beginner).</li>
+              <li>The round ends when every Hider is found or escapes.</li>
+              <li>Everyone takes a turn as Seeker. Highest total score = <b>Champion! 🏆</b></li>
+            </ol>
+          </div>
+          <div class="howto-card">
+            <h3>⭐ Scoring</h3>
+            <table class="score-table">
+              <tr><td>Seeker finds on guess 1</td><td class="pts">+100</td></tr>
+              <tr><td>Seeker finds on guess 2</td><td class="pts">+60</td></tr>
+              <tr><td>Seeker finds on guess 3</td><td class="pts">+30</td></tr>
+              <tr><td>Seeker finds on guess 4 (Beginner)</td><td class="pts">+20</td></tr>
+              <tr><td>Hider survives 2 guesses (found on 3rd+)</td><td class="pts">+30</td></tr>
+              <tr><td>Hider escapes (never found)</td><td class="pts">+100</td></tr>
+            </table>
+          </div>
+          <div class="howto-card">
+            <h3>⚡ Power-Ups</h3>
+            <p>Each round, players get one power-up (Seekers get Seeker power-ups, Hiders get Hider power-ups). One use per round!</p>
+            <div class="pu-list">
+              <div class="pu-item"><span class="pu-emoji">📡</span><div><b>Scanner Pulse</b> (Seeker) — highlights 3 spots; one hides the target.</div></div>
+              <div class="pu-item"><span class="pu-emoji">🤖</span><div><b>Robot Clue</b> (Seeker) — a robot gives you a clue.</div></div>
+              <div class="pu-item"><span class="pu-emoji">➕</span><div><b>Extra Guess</b> (Seeker) — one more guess for this Hider.</div></div>
+              <div class="pu-item"><span class="pu-emoji">✨</span><div><b>Hologram Decoy</b> (Hider) — a fake shimmer appears elsewhere.</div></div>
+              <div class="pu-item"><span class="pu-emoji">🔕</span><div><b>Silent Mode</b> (Hider) — no shimmer hint on your spot.</div></div>
+              <div class="pu-item"><span class="pu-emoji">🚇</span><div><b>Secret Tunnel</b> (Hider) — moves you to a connected spot before the first guess.</div></div>
+            </div>
+          </div>
+          <div class="howto-card">
+            <h3>🛡️ Safety &amp; Privacy</h3>
+            <p>No ads, no chat, no links, no purchases, no personal data. Only nicknames are used, and everything stays on your device. Perfect for classrooms and families.</p>
+          </div>
+        </div>
+        <div class="nav-row">
+          <button class="btn btn-secondary" id="btn-howto-back">← Back</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TUTORIAL ================= -->
+    <section class="screen" id="screen-tutorial">
+      <div class="tutorial-inner">
+        <div class="tutorial-step" id="tutorial-step">
+          <div class="tut-emoji" id="tut-emoji">🙈</div>
+          <h2 class="tut-title" id="tut-title">Hiders secretly choose a place</h2>
+          <p class="tut-text" id="tut-text">When it is your turn, tap one hiding spot on the city map. Do not let anyone else see!</p>
+        </div>
+        <div class="tut-dots" id="tut-dots"></div>
+        <div class="nav-row">
+          <button class="btn btn-secondary" id="btn-tut-skip">Skip Tutorial</button>
+          <button class="btn btn-secondary" id="btn-tut-back" style="display:none">← Back</button>
+          <button class="btn btn-primary" id="btn-tut-next">Next ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HIDER TURN ================= -->
+    <section class="screen" id="screen-hide">
+      <div class="topbar" id="topbar-hide"></div>
+      <div class="banner" id="hide-banner"></div>
+      <div class="map-wrap" id="map-hide"></div>
+      <div class="toast" id="toast"></div>
+    </section>
+
+    <!-- ================= PRIVACY PASS ================= -->
+    <section class="screen" id="screen-privacy">
+      <div class="privacy-inner">
+        <div class="privacy-lock">🔒</div>
+        <h2 class="screen-title" id="privacy-title">Pass the device!</h2>
+        <p class="privacy-msg" id="privacy-msg"></p>
+        <div class="privacy-name-card" id="privacy-name-card"></div>
+        <button class="btn btn-primary btn-big" id="btn-privacy-ready">Ready — Pass to the Next Player</button>
+      </div>
+    </section>
+
+    <!-- ================= SEEKER TURN ================= -->
+    <section class="screen" id="screen-seek">
+      <div class="topbar" id="topbar-seek"></div>
+      <div class="banner" id="seek-banner"></div>
+      <div class="map-wrap" id="map-seek"></div>
+      <div class="toast" id="toast-seek"></div>
+    </section>
+
+    <!-- ================= ROUND RESULTS ================= -->
+    <section class="screen" id="screen-round-results">
+      <div class="results-inner">
+        <h2 class="screen-title" id="results-title">Round Complete!</h2>
+        <div id="results-body"></div>
+        <div class="nav-row">
+          <button class="btn btn-primary btn-big" id="btn-next-round">Next Round ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CHAMPION ================= -->
+    <section class="screen" id="screen-champion">
+      <div class="champ-inner">
+        <div class="champ-trophy">🏆</div>
+        <h2 class="champ-title">Future Hide &amp; Seek Champion</h2>
+        <div class="champ-name" id="champ-name"></div>
+        <div id="champ-leaderboard"></div>
+        <div class="nav-row">
+          <button class="btn btn-primary btn-big" id="btn-play-again">Play Again ▶</button>
+          <button class="btn btn-secondary btn-big" id="btn-main-menu">Main Menu</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ================= MODAL ================= -->
+  <div class="modal-root" id="modal-root" hidden>
+    <div class="modal-card" id="modal-card"></div>
+  </div>
+
+  <!-- ================= CONFETTI ================= -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <script src="js/game-core.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
