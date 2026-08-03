@@ -648,7 +648,41 @@
     else goHideTurn();
   }
 
-  /* ---------- Seeker turn ---------- */
+  /* ---------- Seeker turn (FPS first-person, 2D map as fallback) ---------- */
+  var fps = null;
+
+  function fpsSupported() {
+    if (!window.THREE) return false;
+    try {
+      var c = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+    } catch (e) { return false; }
+  }
+
+  function ensureFPS() {
+    if (fps) return fps;
+    fps = new window.FPSWorld($('fps-wrap'), {
+      spots: FHS.LOCATIONS,
+      activeIds: game.getState().activeSpots,
+      debug: !!window.__FPS_TEST__,
+      onScan: seekConfirmFlow
+    });
+    $('scan-btn').addEventListener('click', function () { if (fps) fps.scanNow(); });
+    return fps;
+  }
+
+  function showFpsHint() {
+    var el = $('fps-hint');
+    if (!el) return;
+    var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    el.textContent = coarse
+      ? '🕹️ Left stick: move · Right side: look · Scan button: search'
+      : '🎮 Click the city: look around · WASD: move · Aim + click (or Scan): search';
+    el.classList.add('show');
+    clearTimeout(showFpsHint._t);
+    showFpsHint._t = setTimeout(function () { el.classList.remove('show'); }, 6500);
+  }
+
   function goSeekPhase() {
     if (!game) return;
     var state = game.getState();
@@ -664,8 +698,11 @@
     var seeker = playerById(state, state.currentSeekerId);
     renderTopbar($('topbar-seek'), seeker, 'seeker', state, st);
 
+    var useFps = fpsSupported();
     var banner = '🔍 <b>' + esc(seeker.name) + '</b> is searching for <b>' + esc(st.target.name) + '</b>!';
-    banner += '<span class="banner-sub">Tap a spot to search. Guesses left: ' + st.guessesLeft + ' of ' + st.guessesTotal + ' · Hiders left: ' + st.hidersRemaining + '</span>';
+    banner += '<span class="banner-sub">' + (useFps
+      ? 'Walk the city, aim at a glowing object and scan it!'
+      : 'Tap a spot to search.') + ' Guesses left: ' + st.guessesLeft + ' of ' + st.guessesTotal + ' · Hiders left: ' + st.hidersRemaining + '</span>';
     if (st.autoClue) banner += '<span class="clue-box">🤖 Clue: ' + esc(st.autoClue) + '</span>';
     if (st.powerUp && !st.powerUp.used) {
       banner += '<br><button class="btn btn-small" data-action="use-seeker-power" style="margin-top:8px">⚡ Use Power-Up: ' + st.powerUp.emoji + ' ' + esc(st.powerUp.name) + '</button>';
@@ -677,14 +714,30 @@
 
     U.pendingSpot = null;
     U.pendingPowerUp = null;
-    renderMap($('map-seek'), 'seek');
-    show('screen-seek');
+    if (useFps) {
+      $('screen-seek').classList.add('fps-mode');
+      $('map-seek').style.display = 'none';
+      $('fps-wrap').style.display = '';
+      show('screen-seek');          // must be visible BEFORE creating WebGL world (needs layout size)
+      ensureFPS();
+      fps._resize();
+      fps.setState({
+        activeIds: state.activeSpots,
+        hints: st.hintSpots,
+        decoys: st.decoySpots,
+        scanner: st.scannerSpots
+      });
+      showFpsHint();
+    } else {
+      $('screen-seek').classList.remove('fps-mode');
+      $('fps-wrap').style.display = 'none';
+      $('map-seek').style.display = '';
+      renderMap($('map-seek'), 'seek');
+      show('screen-seek');
+    }
   }
 
-  function handleSeekMapClick(e) {
-    var spotEl = e.target.closest ? e.target.closest('.spot') : null;
-    if (!spotEl || !game) return;
-    var spotId = spotEl.getAttribute('data-spot');
+  function seekConfirmFlow(spotId) {
     var state = game.getState();
     if (state.phase !== 'seeker') return;
     var st = game.getSeekerSearchState();
@@ -711,7 +764,6 @@
     }
     var loc = spotById(spotId);
     U.pendingSpot = spotId;
-    renderMap($('map-seek'), 'seek');
     AudioMan.select();
     showModal(
       '<div class="modal-emoji">🔍</div>' +
@@ -722,6 +774,12 @@
       '<button class="btn btn-secondary" data-action="cancel-search">Choose Another</button>' +
       '</div>'
     );
+  }
+
+  function handleSeekMapClick(e) {
+    var spotEl = e.target.closest ? e.target.closest('.spot') : null;
+    if (!spotEl || !game) return;
+    seekConfirmFlow(spotEl.getAttribute('data-spot'));
   }
 
   function doSearch() {
@@ -749,6 +807,7 @@
 
     if (res.escaped) {
       AudioMan.escape();
+      if (fps) fps.revealSpot(res.revealSpot.id);
       showModal(
         '<div class="modal-emoji">🏃</div>' +
         '<div class="modal-title">The Hider escaped this round!</div>' +
@@ -943,6 +1002,7 @@
 
   function goMenu() {
     AudioMan.stopMusic();
+    if (fps) { fps.dispose(); fps = null; }
     game = null;
     U.pendingSpot = null;
     U.pendingPowerUp = null;
@@ -1104,6 +1164,7 @@
     confirmHide: confirmHide,
     doSearch: doSearch,
     nextRound: nextRound,
+    fpsWorld: function () { return fps; },
     setSetup: function (count, diff, data) {
       setupPlayers = count; setupDifficulty = diff; setupData = data;
       renderSetup();

@@ -13,12 +13,19 @@ The game is split into two clearly separated layers:
 | Layer | File | Responsibility |
 |---|---|---|
 | **Core logic** | `js/game-core.js` | Rules engine: state machine, hiding, searching, scoring, rounds, leaderboard, power-ups, clue generation. Pure JavaScript — no DOM access. Runs in the browser **and** in Node.js (for automated tests). |
-| **UI layer** | `js/ui.js` | Screens, the SVG city map, input handling, sounds/music, confetti, tutorial, localStorage persistence. Only talks to the core through its public, *sanitised* API. |
-| **Styles** | `css/style.css` | Neon-futuristic theme, responsive layout, kid-friendly sizes. |
+| **FPS engine** | `js/fps.js` | First-person 3D Seeker world (THREE.js, vendored at `js/vendor/three.min.js`): neon city, WASD + mouse / touch-joystick controls, raycast scanning, minimap. No weapons — the Seeker scans objects with a friendly device. |
+| **UI layer** | `js/ui.js` | Screens, the SVG city map (hider turns + 2D fallback), FPS wiring, input handling, sounds/music, confetti, tutorial, localStorage persistence. Only talks to the core through its public, *sanitised* API. |
+| **Styles** | `css/style.css` | Neon-futuristic theme, responsive layout, kid-friendly sizes, FPS HUD (reticle, scan button, joystick, minimap). |
 | **Shell** | `index.html` | All 9 screens as simple `<section class="screen">` elements toggled with `.active`. |
 
 The core exposes `FHS.createGame(config, rng)` returning a game object. The UI holds
 one instance in `game` and re-renders the current screen after every core call.
+
+**FPS mode:** Hiders still pick secret spots on the 2D city map (fast, pass-and-play).
+The Seeker then walks the SAME city in first-person 3D and scans glowing objects —
+aim + click (desktop) or left-stick/right-drag + Scan button (mobile). If WebGL is
+unavailable, the Seeker automatically falls back to the 2D map. All rules, scoring,
+secrecy and power-ups are identical.
 
 ## 2. Game Screens
 

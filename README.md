@@ -4,7 +4,8 @@ A fun, safe, futuristic **hide-and-seek game for 2–5 players on one device**,
 made for kids aged 9–12. Set in the Neon Future City!
 
 - 🏙️ 22 hiding spots on a glowing city map
-- 👥 Pass-and-play: Hiders secretly choose spots, the Seeker searches
+- 🕹️ **FPS Seeker mode**: walk the neon city in first-person 3D and scan objects (no weapons — safe for kids)
+- 👥 Pass-and-play: Hiders secretly choose spots on the map, the Seeker explores in 3D
 - 🎯 3 guesses per Hider (4 on Beginner), smart scoring
 - ⚡ 6 power-ups: Scanner Pulse, Robot Clue, Extra Guess, Hologram Decoy, Silent Mode, Secret Tunnel
 - 🎚️ 3 difficulties · 8 avatars · tutorial · sound & music · champion screen

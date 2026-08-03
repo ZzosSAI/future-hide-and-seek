@@ -185,7 +185,16 @@
     <section class="screen" id="screen-seek">
       <div class="topbar" id="topbar-seek"></div>
       <div class="banner" id="seek-banner"></div>
-      <div class="map-wrap" id="map-seek"></div>
+      <!-- First-person 3D city (FPS mode) -->
+      <div class="fps-wrap" id="fps-wrap">
+        <div class="fps-reticle" id="fps-reticle"><span class="fps-reticle-dot"></span></div>
+        <div class="fps-aim-label" id="fps-aim-label"></div>
+        <div class="fps-joystick" id="fps-joystick"></div>
+        <button class="scan-btn" id="scan-btn" aria-label="Scan">🔍 Scan</button>
+        <div class="fps-hint" id="fps-hint"></div>
+      </div>
+      <!-- 2D map fallback (used only when WebGL is unavailable) -->
+      <div class="map-wrap" id="map-seek" style="display:none"></div>
       <div class="toast" id="toast-seek"></div>
     </section>
 
@@ -224,7 +233,9 @@
   <!-- ================= CONFETTI ================= -->
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
+  <script src="js/vendor/three.min.js"></script>
   <script src="js/game-core.js"></script>
+  <script src="js/fps.js"></script>
   <script src="js/ui.js"></script>
 </body>
 </html>
