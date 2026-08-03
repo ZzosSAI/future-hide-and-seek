@@ -561,6 +561,7 @@
   };
 
   FPSWorld.prototype.scanNow = function () {
+    this.aimedId = this._aim();       // fresh raycast — always reflects current aim
     if (this.aimedId) this.onScan(this.aimedId);
     else this.onScan(null);
   };
@@ -595,10 +596,19 @@
     var dz = d.group.position.z - this.pos.z;
     var dist = Math.sqrt(dx * dx + dz * dz);
     if (dist > 16) { this._walkToward(id, dist); }
+    dx = d.group.position.x - this.pos.x;   // recompute after teleport
+    dz = d.group.position.z - this.pos.z;
+    dist = Math.sqrt(dx * dx + dz * dz) || 1;
     this.yaw = Math.atan2(-dx, -dz);
-    this.pitch = -Math.atan2(1.7 - 2.2, dist || 1) + 0.15;
-    this.aimedId = id;
-    return true;
+    // aim level at the hit-sphere centre (y=1.6) so the raycast is reliable
+    this.pitch = -Math.atan2(this.pos.y - 1.6, dist);
+    // sync the camera NOW so the raycast below uses the new orientation
+    this.camera.position.copy(this.pos);
+    this.camera.rotation.order = 'YXZ';
+    this.camera.rotation.y = this.yaw;
+    this.camera.rotation.x = this.pitch;
+    this.aimedId = this._aim();
+    return this.aimedId === id;
   };
   FPSWorld.prototype._walkToward = function (id, dist) {
     // teleport closer so tests can aim reliably
